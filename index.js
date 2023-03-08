@@ -1,7 +1,7 @@
 // importing express locally
 const express = require('express'),
 //declaring app variable
-    app = express,   
+    app = express(),   
 //importing morgan     
     morgan = require('morgan');
     path = require('path');
