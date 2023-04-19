@@ -39,3 +39,7 @@
 ::1 - - [14/Mar/2023:23:04:02 +0000] "POST /users/1/2040 HTTP/1.1" 200 36
 ::1 - - [14/Mar/2023:23:07:29 +0000] "DELETE /users/1/An%20Inconvenient%20Truth HTTP/1.1" 200 57
 ::1 - - [14/Mar/2023:23:07:53 +0000] "DELETE /users/1 HTTP/1.1" 200 23
+::1 - - [16/Mar/2023:20:51:47 +0000] "GET /favicon.ico HTTP/1.1" 404 150
+::1 - - [18/Apr/2023:22:33:40 +0000] "DELETE /users HTTP/1.1" 404 147
+::1 - - [18/Apr/2023:22:34:28 +0000] "DELETE /users HTTP/1.1" 404 147
+::1 - - [18/Apr/2023:22:34:46 +0000] "GET /users HTTP/1.1" 404 144

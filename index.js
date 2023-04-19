@@ -13,13 +13,24 @@ const app = express();
 //creating write stream to log.txt
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
 
+//Integrating Mongoose
+const mongoose = require('mongoose');
+const { title } = require('process');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+
 // UsingMorgan logger, express, body-parser
 app.use(morgan('common', {stream: accessLogStream}));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-
+/*
 //Users
 let users = [
     {
@@ -37,7 +48,7 @@ let users = [
 let movies = [
     {
         Title: "An Inconvenient Truth",
-        Description: "Filmmaker Davis Guggenheim follows Al Gore on the lecture circuit, as the former presidential candidate campaigns to raise public awareness of the dangers of climnate change",
+        Description: "Filmmaker Davis Guggenheim follows Al Gore on the lecture circuit, as the former presidential candidate campaigns to raise public awareness of the dangers of climate change",
         Genre: {
             "Name":"Documentary",
             "Description":"A documentary film is a non-fictional motion-picture intended to document reality, primarily for the purposes of instruction, education or maintaining a historical record"
@@ -105,7 +116,6 @@ let movies = [
     },
     {
         Title: "Princess Mononoke",
-        Stars: ['Woody Harrelson', 'Ray Archuleta'],
         Description: "On a journey to find the cure for a Tatarigami's curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara, a mining colony.",
         Genre: {
             "Name":"Fantasy",
@@ -113,7 +123,7 @@ let movies = [
         },
         Director: {
             "Name": "Hayao Miyazaki",
-            "Bio": " Hayao Miyakazi is a Japanese animator, director, producer, screenwriter, author and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and creator of Japanese animated feature fims, widely regarded as one of the most accomplished filmmakers in the history of animation.",
+            "Bio": "Hayao Miyakazi is a Japanese animator, director, producer, screenwriter, author and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and creator of Japanese animated feature fims, widely regarded as one of the most accomplished filmmakers in the history of animation.",
             "Birth":"1941",
             "Death":"Present"
         },
@@ -139,8 +149,8 @@ let movies = [
         featured: "yes"
     },
     {
-        Title: 'Dont Look Up',
-        Description: "PDon't Look Up is a 2021 American apocalyptic political satire black comedy film with a stellar ensemble cast. Two low-level astronomers must go on a giant media tour to warn humankind of an approaching comet that will destroy planet earth.",
+        Title: "Dont Look Up",
+        Description: "Don't Look Up is a 2021 American apocalyptic political satire black comedy film with a stellar ensemble cast. Two low-level astronomers must go on a giant media tour to warn humankind of an approaching comet that will destroy planet earth.",
         Genre: {
             "Name":"Comedy",
             "Description":"Comedy is a genre that emphasises humour and is designed to make audiences laugh."
@@ -207,8 +217,174 @@ let movies = [
         featured: "yes"
     },
 ];
+*/
+
+// Return a list of ALL movies to the User
+
+app.get('/movies', (req, res) => {
+    Movies.find()
+    .then((movies) => {
+        res.status(200).json(movies);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+//Return data about a single movie by title
+
+app.get('/movies/:Title', (req, res) => {
+    Movies.findOne({ Title: req.params.Title})
+    .then((movie) => {
+        res.json(movie);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: '+ err);
+    });
+});
+
+// return data about a single movie by director
+app.get('/movies/directors/:directorName', (req, res) => {
+    Movies.findOne({ 'Director.Name': req.params.directorName})
+    .then((movie) => {
+        res.json(movie.Director);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: '+ err);
+    });
+});
+
+//return data about a genre by name
+
+app.get('/movies/genre/:genreName', (req, res) => {
+    Movies.Genre.findOne({ genreName: req.params.genreName})
+    .then((genre) => {
+        res.json(genre);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+// return data about a director by name
+
+app.get('/movies/directors/:directorName', (req, res) => {
+    Movies.Director.findOne({ directorName: req.params.directorName})
+    .then((Director) => {
+        res.json(Director);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+})
+
+//allow new users to register
+
+app.post('/users', (req, res) => {
+    Users.findOne({ Username: req.body.Username})
+    .then((user) => {
+        if (user) {
+            return res.status(400).send(req.body.Username + ' already exists.');
+        } else {
+            Users.create({
+                Username: req.body.Username,
+                Password: req.body.Password,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            })
+            .then((user) => {res.status(201).json(user) })
+            .catch((error) => {
+                console.error(error);
+                res.status(500).send('Error: ' + err);
+            })
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + err);
+    });
+});
 
 
+//allow users to update their user info
+
+app.put('/users/:Username', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username }),
+    { $set:
+        {
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+        }
+    },
+    { new: true },
+    (err, updatedUser) => {
+        if(err) {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
+        }
+    };
+});
+
+// allow users to add a movie to their list of favourites
+
+app.post('/users/:Username/movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username},
+        {$push: { FavouriteMovies: req.params.MovieID}},
+        {new: true}, 
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
+});
+
+// allow users to remove a movie from their list of favourites
+
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username},
+        {$pull: { FavouriteMovies: req.params.MovieID}},
+        {new: true}, 
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
+});
+
+//Allow existing users to deregister
+
+app.delete('/users(:Username', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username})
+    .then((user) => {
+        if (!user) {
+            res.status(400).send(req.params.Username + ' was not found');
+        } else {
+            res.status(200).send(req.params.Username + ' was deleted.');
+        }
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+
+/* OLD REQUESTS
 // GET REQUESTS - READ
 
 app.get('/', (req, res) => {
@@ -342,6 +518,8 @@ app.delete('/users/:id', (req, res) => {
     }
 
 });
+
+*/
 
 //express static
 
