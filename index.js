@@ -279,17 +279,6 @@ app.get('/users/:Username', (req, res) => {
 });
 
 
-// return data about a single movie by director
-app.get('/movies/directors/:directorName', (req, res) => {
-    Movies.findOne({ 'Director.Name': req.params.directorName})
-    .then((movie) => {
-        res.json(movie.Director);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: '+ err);
-    });
-});
 
 //return data about a genre by name
 
