@@ -31,16 +31,23 @@
 
                 </tr>
                 <tr>
+                    <td>Return a list of all users </td>
+                    <td>/users</td>
+                    <td>GET</td>
+                    <td>A JSON object holding data about all users</td>
+
+                </tr>
+                <tr>
                     <td>Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user</td>
                     <td>/movies/:title</td>
                     <td>GET</td>
                     <td>a JSON object holding data about a single movie containing the data above</td>
                 </tr>
                 <tr>
-                    <td>Return data about a genre (description) by name/title (e.g., “Thriller”)</td>
-                    <td>/movies/genres/:genreName</td>
+                    <td>Return data about a single user by username </td>
+                    <td>/users/:Username</td>
                     <td>GET</td>
-                    <td>JSON object holding data about genre</td>
+                    <td>a JSON object holding data about a single movie containing the data above</td>
                 </tr>
                 <tr>
                     <td>Return data about a director (bio, birth year, death year) by name</td>
@@ -49,26 +56,32 @@
                     <td>JSON object holding data about director</td>
                 </tr>
                 <tr>
+                    <td>Return data about a genre (description) by name/title (e.g., “Thriller”)</td>
+                    <td>/movies/genres/:genreName</td>
+                    <td>GET</td>
+                    <td>JSON object holding data about genre</td>
+                </tr>
+                <tr>
                     <td>Allow new users to register</td>
                     <td>/users</td>
                     <td>POST</td>
                     <td>a text message indicating successfull registration of the account</td>
                 </tr>
                 <tr>
-                    <td>Allow users to update their user info (username)</td>
-                    <td>/users/:id</td>
+                    <td>Allow users to update their user info by username</td>
+                    <td>/users/:Username</td>
                     <td>PUT</td>
                     <td>a text saying the info got updated</td>
                 </tr>
                 <tr>
-                    <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)</td>
-                    <td>/users/:id/:movieTitle</td>
+                    <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been added</td>
+                    <td>/users/:Username/:movieID</td>
                     <td>POST</td>
                     <td>a text message that movie was added to favorite list</td>
                 </tr>
                 <tr>
                     <td>Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)</td>
-                    <td>/users/:id/:movieTitle
+                    <td>/users/:Username/:movieID
                     </td>
                     <td>DELETE</td>
                     <td>text message that movie was removed from favorites list</td>
