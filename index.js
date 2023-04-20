@@ -293,15 +293,15 @@ app.get('/movies/directors/:directorName', (req, res) => {
 
 //return data about a genre by name
 
-app.get('/genre/:Name', (req, res) => {
-    Genres.findOne({ Name: req.params.Name})
-    .then((genre) => {
-        res.json(genre.Description);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
+app.get('/movies/genre/:genreName', (req, res) => {
+   Movies.findOne({ 'Genre.Name': req.params.Name})
+   .then((genre) => {
+    res.json(Movies.Genre);
+   })
+   .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error: '+ err);
+   })
 });
 
 // return data about a director by name
