@@ -33,6 +33,12 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+// import auth.js and passport
+let auth = require('./auth')(app);
+
+const passport = require('passport');
+require('./passport');
+
 /*
 //Users
 let users = [
@@ -229,10 +235,10 @@ app.get('/', (req, res) => {
 
 // Return a list of ALL movies to the User
 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
     .then((movies) => {
-        res.status(200).json(movies);
+        res.status(201).json(movies);
     })
     .catch((err) => {
         console.error(err);
