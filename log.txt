@@ -169,3 +169,7 @@
 ::1 - - [25/Apr/2023:18:41:29 +0000] "GET /movies HTTP/1.1" 401 -
 ::1 - - [25/Apr/2023:18:46:51 +0000] "POST /users HTTP/1.1" 201 171
 ::1 - - [25/Apr/2023:18:51:22 +0000] "POST /login?Username=newtest&Password=newtest HTTP/1.1" 400 36
+::1 - - [25/Apr/2023:19:17:05 +0000] "POST /login?Username=newtest&Password=newtest HTTP/1.1" 400 36
+::1 - - [25/Apr/2023:19:17:13 +0000] "GET /users HTTP/1.1" 401 -
+::1 - - [25/Apr/2023:19:21:08 +0000] "POST /login?Username=newtest&Password=newtest HTTP/1.1" 400 36
+::1 - - [25/Apr/2023:19:22:40 +0000] "POST /login?Username=tristanacm&Password=passwordabc HTTP/1.1" 400 36
